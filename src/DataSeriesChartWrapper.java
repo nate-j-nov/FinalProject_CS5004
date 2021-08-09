@@ -42,16 +42,12 @@ public class DataSeriesChartWrapper  {
         // Create the chart
         chart = ChartFactory.createTimeSeriesChart(dataSeries.getSeriesName(), "Date", yAxisLabel, dataset, false, true, false);
 
-        String chartTitle;
-        switch(transformationType) {
-            case Level:
-                chartTitle = dataSeries.getSeriesName();
-            case MonthlyDelta:
-                chartTitle = dataSeries.getSeriesName() + " Monthly Change";
-            case YearlyDelta:
-                chartTitle = dataSeries.getSeriesName() + " Yearly Change";
-        }
-        chart.setTitle(new TextTitle(dataSeries.getSeriesName()));
+        String chartTitle = switch (transformationType) {
+            case Level -> dataSeries.getSeriesName();
+            case MonthlyDelta -> dataSeries.getSeriesName() + " Monthly Change";
+            case YearlyDelta -> dataSeries.getSeriesName() + " Yearly Change";
+        };
+        chart.setTitle(new TextTitle(chartTitle));
 
         // Set settings for plot
         XYPlot plot = chart.getXYPlot();
@@ -75,9 +71,14 @@ public class DataSeriesChartWrapper  {
 
         // Set value axis options
         ValueAxis valueAxis = plot.getRangeAxis();
-        double min = dataSeries.getMin(transformationType) ;
+        double min = dataSeries.getMin(transformationType) - 0.1;
         double max = dataSeries.getMax(transformationType);
-        valueAxis.setRange(min, max);
+        double average = (min + max) / 2;
+
+        double axisMin = min - 0.1 * average;
+        double axisMax = max + 0.1 * average;
+
+        valueAxis.setRange(axisMin, axisMax);
 
         // Set the chart panel settings
         ChartPanel chartPanel = new ChartPanel(chart);
