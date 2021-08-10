@@ -3,6 +3,8 @@ import jdk.jshell.spi.ExecutionControl;
 import javax.xml.crypto.Data;
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  * Controller class for the application
@@ -29,6 +31,10 @@ public class Controller {
     }
 
     public ArrayList<DataSeries> getAvailableDataSeriesAfterFilter(String textToFilter) {
-        throw new UnsupportedOperationException();
+        ArrayList<DataSeries> returnSeries = new ArrayList<>();
+        returnSeries.addAll(availableDataSeries);
+        return (ArrayList<DataSeries>) returnSeries.stream().filter(d -> d.getSeriesName()
+                .toLowerCase().contains(textToFilter)).
+                collect(Collectors.toList());
     }
 }

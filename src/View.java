@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /*
  * Created by JFormDesigner on Tue Aug 03 16:20:51 EDT 2021
@@ -61,6 +62,7 @@ public class View extends JFrame {
         transformationComboBox = new JComboBox();
         transformButton = new JButton();
         logoPanel = new JLabel();
+        clearSearchButton = new JButton();
 
         //======== this ========
         var contentPane = getContentPane();
@@ -109,6 +111,11 @@ public class View extends JFrame {
         contentPane.add(logoPanel);
         logoPanel.setBounds(10, 5, 235, 140);
 
+        //---- clearSearchButton ----
+        clearSearchButton.setText("Clear Search");
+        contentPane.add(clearSearchButton);
+        clearSearchButton.setBounds(1195, 145, 135, 30);
+
         {
             // compute preferred size
             Dimension preferredSize = new Dimension();
@@ -155,6 +162,9 @@ public class View extends JFrame {
             outputMessageTextPane.append("\nUnable to load load the logo");
             e.printStackTrace();
         }
+
+        // Set clear search button details
+        clearSearchButton.setVisible(false);
     }
 
     private void initEvents() {
@@ -194,6 +204,35 @@ public class View extends JFrame {
                 outputMessageTextPane.append("\n" + selectedTransformation + " data retrieved...");
             }
         });
+
+        searchButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                String searchText = SearchBar.getText();
+                if(searchText.equals("Search") || searchText.isBlank() || searchText.isEmpty()) {
+                    outputMessageTextPane.append("\nInvalid search...");
+                    SearchBar.setText("Search");
+                    return;
+                }
+                clearSearchButton.setVisible(true);
+                displayedDataSeries = controller.getAvailableDataSeriesAfterFilter(searchText.toLowerCase());
+                dataSeriesDropdown.setModel(new DefaultComboBoxModel(displayedDataSeries.toArray()));
+                dataSeriesDropdown.setSelectedIndex(0);
+                outputMessageTextPane.append("\nSearch complete for \"" + searchText + "\"...");
+            }
+        });
+
+        clearSearchButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                SearchBar.setText("Search");
+                displayedDataSeries = controller.getAvailableDataSeries();
+                dataSeriesDropdown.setModel(new DefaultComboBoxModel(displayedDataSeries.toArray()));
+                dataSeriesDropdown.setSelectedIndex(0);
+                clearSearchButton.setVisible(false);
+                outputMessageTextPane.append("\nSearch cleared...");
+            }
+        });
     }
 
     /**
@@ -230,6 +269,7 @@ public class View extends JFrame {
      private JComboBox transformationComboBox;
      private JButton transformButton;
      private JLabel logoPanel;
+     private JButton clearSearchButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     private ChartPanel chartPanel;
     private TransformationType[] transformationTypes;
