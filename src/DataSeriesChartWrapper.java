@@ -11,7 +11,6 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.XYDataset;
 
-import javax.swing.*;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,10 +70,9 @@ public class DataSeriesChartWrapper  {
 
         // Set value axis options
         ValueAxis valueAxis = plot.getRangeAxis();
-        double min = dataSeries.getMin(transformationType) - 0.1;
+        double min = dataSeries.getMin(transformationType);
         double max = dataSeries.getMax(transformationType);
-        double average = (min + max) / 2;
-
+        double average = Math.abs((min + max) / 2);
         double axisMin = min - 0.1 * average;
         double axisMax = max + 0.1 * average;
 

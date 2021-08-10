@@ -38,14 +38,14 @@ public class LaborMarketSeriesGenerator extends DataSeriesGenerator{
         // Clean the names of the data series.
         cleanDataSeriesNames(selectedSeries);
 
-        setProviderAndDatasetDetails(selectedSeries, provider, "Current Employment Statistics", datasetCode,PeriodType.Monthly);
+        setProviderAndDatasetDetails(selectedSeries, provider, "Current Employment Statistics", datasetCode, PeriodType.Monthly);
 
         return selectedSeries;
     }
 
     /**
      * Clean up the GDP names so extraneous parts are is removed. TODO: put this in abstract class.
-     * @param laborMarketDataSeries ArrayList of GDP data
+     * @param dataSeries ArrayList of GDP data
      */
     protected void cleanDataSeriesNames(ArrayList<DataSeries> dataSeries) {
         for (DataSeries ds : dataSeries) {

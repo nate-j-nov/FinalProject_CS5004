@@ -26,13 +26,17 @@ public class View extends JFrame {
     private ArrayList<DataSeries> displayedDataSeries;
     private DataSeries selectedDataSeries;
     private final int ZERO = 0;
+    private TransformationType selectedTransformation;
 
     public View(Controller controller)
     {
         this.controller = controller;
         this.displayedDataSeries = controller.getAvailableDataSeries();
         this.selectedDataSeries = displayedDataSeries.get(ZERO);
+        this.selectedTransformation = TransformationType.Level;
         selectedDataSeries.retrieveRawData();
+        transformationTypes = new TransformationType[]{TransformationType.Level,
+                TransformationType.MonthlyDelta, TransformationType.YearlyDelta};
         initComponents();
         setComponentDetails();
         initEvents();
@@ -50,6 +54,8 @@ public class View extends JFrame {
         getDataButton = new JButton();
         dataTableScrollPanel = new JScrollPane();
         dataTable = new JTable();
+        transformationComboBox = new JComboBox();
+        transformButton = new JButton();
 
         //======== this ========
         var contentPane = getContentPane();
@@ -72,7 +78,7 @@ public class View extends JFrame {
             outputMessageScrollPane.setViewportView(outputMessageTextPane);
         }
         contentPane.add(outputMessageScrollPane);
-        outputMessageScrollPane.setBounds(10, 700, 465, 175);
+        outputMessageScrollPane.setBounds(10, 725, 465, 175);
 
         //---- getDataButton ----
         getDataButton.setText("Get Data");
@@ -84,7 +90,14 @@ public class View extends JFrame {
             dataTableScrollPanel.setViewportView(dataTable);
         }
         contentPane.add(dataTableScrollPanel);
-        dataTableScrollPanel.setBounds(610, 700, 835, 175);
+        dataTableScrollPanel.setBounds(610, 725, 835, 175);
+        contentPane.add(transformationComboBox);
+        transformationComboBox.setBounds(10, 185, 165, 30);
+
+        //---- transformButton ----
+        transformButton.setText("Transform Data");
+        contentPane.add(transformButton);
+        transformButton.setBounds(215, 185, 165, 30);
 
         {
             // compute preferred size
@@ -94,6 +107,7 @@ public class View extends JFrame {
                 preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
                 preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
             }
+
             Insets insets = contentPane.getInsets();
             preferredSize.width += insets.right;
             preferredSize.height += insets.bottom;
@@ -116,6 +130,10 @@ public class View extends JFrame {
 
         // Set output text pane details
         outputMessageTextPane.setText("Data initialized.");
+
+        // Set transformation type details
+        transformationComboBox.setModel(new DefaultComboBoxModel(transformationTypes));
+        transformationComboBox.setSelectedIndex(ZERO);
     }
 
     private void initEvents() {
@@ -126,17 +144,33 @@ public class View extends JFrame {
                     outputMessageTextPane.append("\nData already displayed.");
                     return;
                 }
+                // Update the data table.
                 selectedDataSeries = (DataSeries) dataSeriesDropdown.getSelectedItem();
+                selectedTransformation = TransformationType.Level;
                 outputMessageTextPane.append("\nRetrieving " + selectedDataSeries.getSeriesName() + " data...");
                 selectedDataSeries.retrieveRawData();
-                dataTable.setModel(new DataSeriesTableModel(selectedDataSeries, TransformationType.Level));
+                dataTable.setModel(new DataSeriesTableModel(selectedDataSeries, selectedTransformation));
                 // Update chart
-                getContentPane().remove(chartPanel);
-                initChart();
-                chartPanel.revalidate();
-                chartPanel.repaint();
-                getContentPane().revalidate();
+                updateChart();
+                transformationComboBox.setSelectedIndex(ZERO);
                 outputMessageTextPane.append("\nRetrieval Successful.");
+            }
+        });
+
+        transformButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(selectedTransformation == transformationComboBox.getSelectedItem()) {
+                    outputMessageTextPane.append("\nAlready displaying this transformation for " + selectedDataSeries.getSeriesName() + ".");
+                    return;
+                }
+                selectedTransformation = (TransformationType) transformationComboBox.getSelectedItem();
+                outputMessageTextPane.append("\nRetrieving " + selectedTransformation + " data...");
+                // Update data table.
+                dataTable.setModel(new DataSeriesTableModel(selectedDataSeries, selectedTransformation));
+                // Update the chart
+                updateChart();
+                outputMessageTextPane.append("\n" + selectedTransformation + " data retrieved...");
             }
         });
     }
@@ -147,12 +181,19 @@ public class View extends JFrame {
      */
     private void initChart() {
         DataSeriesChartWrapper chartWrapper = new DataSeriesChartWrapper(selectedDataSeries);
-        chartPanel = chartWrapper.generateChart(TransformationType.Level);
+        chartPanel = chartWrapper.generateChart(selectedTransformation);
         chartPanel.setPreferredSize(new Dimension(785, 440));
-        chartPanel.setBounds(new Rectangle(10, 200, 1200, 450));
+        chartPanel.setBounds(new Rectangle(10, 250, 1200, 425));
         getContentPane().add(chartPanel);
     }
 
+    private void updateChart() {
+        getContentPane().remove(chartPanel);
+        initChart();
+        chartPanel.revalidate();
+        chartPanel.repaint();
+        getContentPane().revalidate();
+    }
 
     private ChartPanel dataSeriesChartPanel;
      // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
@@ -165,6 +206,9 @@ public class View extends JFrame {
      private JButton getDataButton;
      private JScrollPane dataTableScrollPanel;
      private JTable dataTable;
+     private JComboBox transformationComboBox;
+     private JButton transformButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     private ChartPanel chartPanel;
+    private TransformationType[] transformationTypes;
 }

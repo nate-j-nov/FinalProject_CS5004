@@ -5,10 +5,6 @@
  * Class to generate the data series that will be available in the application
  */
 
-
-// Break these up into two separate classes
-// Create an interface where they have to implement "Generate data" or something.
-// Also make an abstract class that implements setProviderAndDatasetDetails.
 import java.util.ArrayList;
 
 public abstract class DataSeriesGenerator implements IDataSeriesGenerator {
@@ -33,6 +29,5 @@ public abstract class DataSeriesGenerator implements IDataSeriesGenerator {
             ds.setDataSetCode(datasetCode);
         }
     }
-
     protected abstract void cleanDataSeriesNames(ArrayList<DataSeries> dataSeries);
 }
