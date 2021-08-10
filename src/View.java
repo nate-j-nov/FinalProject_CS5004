@@ -2,10 +2,14 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.time.TimeSeriesCollection;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /*
@@ -56,6 +60,7 @@ public class View extends JFrame {
         dataTable = new JTable();
         transformationComboBox = new JComboBox();
         transformButton = new JButton();
+        logoPanel = new JLabel();
 
         //======== this ========
         var contentPane = getContentPane();
@@ -99,6 +104,11 @@ public class View extends JFrame {
         contentPane.add(transformButton);
         transformButton.setBounds(215, 185, 165, 30);
 
+        //---- logoPanel ----
+        logoPanel.setIcon(null);
+        contentPane.add(logoPanel);
+        logoPanel.setBounds(10, 5, 235, 140);
+
         {
             // compute preferred size
             Dimension preferredSize = new Dimension();
@@ -107,7 +117,6 @@ public class View extends JFrame {
                 preferredSize.width = Math.max(bounds.x + bounds.width, preferredSize.width);
                 preferredSize.height = Math.max(bounds.y + bounds.height, preferredSize.height);
             }
-
             Insets insets = contentPane.getInsets();
             preferredSize.width += insets.right;
             preferredSize.height += insets.bottom;
@@ -134,6 +143,18 @@ public class View extends JFrame {
         // Set transformation type details
         transformationComboBox.setModel(new DefaultComboBoxModel(transformationTypes));
         transformationComboBox.setSelectedIndex(ZERO);
+
+        // Set logo details
+        // Followed this SO post: https://stackoverflow.com/a/16345968/15471892
+        BufferedImage image;
+        try {
+            image = ImageIO.read(new File("src/logo.png"));
+            Image logo = image.getScaledInstance(logoPanel.getWidth(), logoPanel.getHeight(), Image.SCALE_SMOOTH);
+            logoPanel.setIcon(new ImageIcon(logo));
+        } catch (IOException e) {
+            outputMessageTextPane.append("\nUnable to load load the logo");
+            e.printStackTrace();
+        }
     }
 
     private void initEvents() {
@@ -208,6 +229,7 @@ public class View extends JFrame {
      private JTable dataTable;
      private JComboBox transformationComboBox;
      private JButton transformButton;
+     private JLabel logoPanel;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     private ChartPanel chartPanel;
     private TransformationType[] transformationTypes;
