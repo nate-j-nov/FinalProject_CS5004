@@ -1,6 +1,9 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -56,10 +59,12 @@ public class DataSeries {
             Date date = rawData.get(i).getDate();
             double value;
             if(i < 1)
-                value = Double.NaN;
-            else
+                continue;
+            else {
                 value = calculateDelta(rawData.get(i).getData(), rawData.get(i - 1).getData());
-
+                BigDecimal bigDecimal = new BigDecimal(value).setScale(4, RoundingMode.HALF_UP);
+                value = bigDecimal.doubleValue();
+            }
             monthlyChangeData.add(new DataPoint(date, value));
         }
     }
@@ -68,22 +73,37 @@ public class DataSeries {
         for (int i = 0; i < rawData.size(); i++) {
             Date date = rawData.get(i).getDate();
             double value;
-            if(i < 12)
-                value = Double.NaN;
-            else
-                value = calculateDelta(rawData.get(i).getData(), rawData.get(i - 12).getData());
+            if(periodType == PeriodType.Quarterly) {
+                if(i < 4)
+                    continue;
+                else {
+                    value = calculateDelta(rawData.get(i).getData(), rawData.get(i - 4).getData());
+                    BigDecimal bigDecimal = new BigDecimal(value).setScale(4, RoundingMode.HALF_UP);
+                    value = bigDecimal.doubleValue();
+                }
 
-            monthlyChangeData.add(new DataPoint(date, value));
+            } else {
+                if(i < 12)
+                    continue;
+                else {
+                    value = calculateDelta(rawData.get(i).getData(), rawData.get(i - 12).getData());
+                    BigDecimal bigDecimal = new BigDecimal(value).setScale(4, RoundingMode.HALF_UP);
+                    value = bigDecimal.doubleValue();
+                }
+            }
+
+
+            yearlyChangeData.add(new DataPoint(date, value));
         }
     }
 
     public ArrayList<DataPoint> getMonthlyChangeData() {
-        if(monthlyChangeData == null) calculateMonthlyChange();
+        if(monthlyChangeData.isEmpty()) calculateMonthlyChange();
         return monthlyChangeData;
     }
 
     public ArrayList<DataPoint> getYearlyChangeData() {
-        if(yearlyChangeData == null) calculateYearlyChange();
+        if(yearlyChangeData.isEmpty()) calculateYearlyChange();
         return yearlyChangeData;
     }
 
@@ -96,32 +116,32 @@ public class DataSeries {
     }
 
     public double getMax(TransformationType transformationType) {
-        switch(transformationType) {
+        switch (transformationType) {
             case Level:
+                if(rawData.isEmpty()) retrieveRawData();
                 return calculateMax(rawData);
-
             case MonthlyDelta:
+                if(monthlyChangeData.isEmpty()) calculateMonthlyChange();
                 return calculateMax(monthlyChangeData);
-
             case YearlyDelta:
+                if(yearlyChangeData.isEmpty()) calculateYearlyChange();
                 return calculateMax(yearlyChangeData);
-
             default:
                 return 0;
         }
     }
 
     public double getMin(TransformationType transformationType) {
-        switch(transformationType){
+         switch (transformationType) {
             case Level:
+                if(rawData.isEmpty()) retrieveRawData();
                 return calculateMin(rawData);
-
             case MonthlyDelta:
+                if(monthlyChangeData.isEmpty()) calculateMonthlyChange();
                 return calculateMin(monthlyChangeData);
-
             case YearlyDelta:
+                if(yearlyChangeData.isEmpty()) calculateYearlyChange();
                 return calculateMin(yearlyChangeData);
-
             default:
                 return 0;
         }
@@ -161,7 +181,7 @@ public class DataSeries {
     }
 
     public String dataToString() {
-        if(rawData == null) {
+        if(rawData.isEmpty()) {
             retrieveRawData();
         }
         StringBuilder stringBuilder = new StringBuilder();
@@ -188,4 +208,5 @@ public class DataSeries {
     public Date getEndDate() {
         return endDate;
     }
+
 }

@@ -1,4 +1,6 @@
 import javax.swing.table.AbstractTableModel;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -11,17 +13,21 @@ public class DataSeriesTableModel extends AbstractTableModel {
 
     public DataSeriesTableModel(DataSeries dataSeries, TransformationType transformationType) {
         this.dataSeries = dataSeries;
-        switch(transformationType) {
+        String nameQualifier = "";
+        switch (transformationType) {
             case Level:
                 this.displayedData = dataSeries.getRawData();
+                break;
             case MonthlyDelta:
                 this.displayedData = dataSeries.getMonthlyChangeData();
+                nameQualifier = "Monthly Change";
+                break;
             case YearlyDelta:
                 this.displayedData = dataSeries.getYearlyChangeData();
+                nameQualifier = "Yearly Change";
         }
-        this.displayedData = dataSeries.getRawData();
         columnNames[0] = "Date";
-        columnNames[1] = dataSeries.getSeriesName();
+        columnNames[1] = dataSeries.getSeriesName() + " " + nameQualifier;
     }
 
     @Override
@@ -40,6 +46,7 @@ public class DataSeriesTableModel extends AbstractTableModel {
         if(columnIndex == 0) {
             return displayedData.get(rowIndex).getDate();
         }
+
         return displayedData.get(rowIndex).getData();
     }
 
