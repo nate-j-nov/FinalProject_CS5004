@@ -29,5 +29,6 @@ public abstract class DataSeriesGenerator implements IDataSeriesGenerator {
             ds.setDataSetCode(datasetCode);
         }
     }
+
     protected abstract void cleanDataSeriesNames(ArrayList<DataSeries> dataSeries);
 }

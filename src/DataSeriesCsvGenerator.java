@@ -2,6 +2,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 public class DataSeriesCsvGenerator extends CsvGeneratorService {
     private DataSeries dataSeries;
@@ -10,14 +11,14 @@ public class DataSeriesCsvGenerator extends CsvGeneratorService {
     public DataSeriesCsvGenerator(DataSeries dataSeries) {
         super();
         this.dataSeries = dataSeries;
-        this.dateFormat = new SimpleDateFormat("MMyyyy");
+        this.dateFormat = new SimpleDateFormat("MM-yyyy");
     }
 
     @Override
     public String generateCsvFile() {
-        LocalDateTime now = LocalDateTime.now();
+        Date now = new Date();
 
-        String fileName = dataSeries.getSeriesCode() + "-"  + dateFormat.format(now) + ".csv";
+        String fileName = dataSeries.getSeriesCode() + "_"  + dateFormat.format(now) + ".csv";
         generateCsvLines();
 
         try {

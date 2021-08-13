@@ -60,6 +60,7 @@ public class View extends JFrame {
         transformButton = new JButton();
         logoPanel = new JLabel();
         clearSearchButton = new JButton();
+        downloadButton = new JButton();
 
         //======== this ========
         var contentPane = getContentPane();
@@ -75,7 +76,7 @@ public class View extends JFrame {
         //---- searchButton ----
         searchButton.setText("Search");
         contentPane.add(searchButton);
-        searchButton.setBounds(1100, 145, searchButton.getPreferredSize().width, 30);
+        searchButton.setBounds(1100, 145, 95, 30);
 
         //======== outputMessageScrollPane ========
         {
@@ -111,7 +112,12 @@ public class View extends JFrame {
         //---- clearSearchButton ----
         clearSearchButton.setText("Clear Search");
         contentPane.add(clearSearchButton);
-        clearSearchButton.setBounds(1195, 145, 135, 30);
+        clearSearchButton.setBounds(1235, 145, 140, 30);
+
+        //---- downloadButton ----
+        downloadButton.setText("Download Data");
+        contentPane.add(downloadButton);
+        downloadButton.setBounds(440, 185, 165, 30);
 
         {
             // compute preferred size
@@ -230,6 +236,15 @@ public class View extends JFrame {
                 outputMessageTextPane.append("\nSearch cleared...");
             }
         });
+
+        downloadButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                outputMessageTextPane.append("\nDownloading CSV for " + selectedDataSeries.getSeriesName());
+                DataSeriesCsvGenerator csvGenerator = new DataSeriesCsvGenerator(selectedDataSeries);
+                outputMessageTextPane.append("\n" + csvGenerator.generateCsvFile());
+            }
+        });
     }
 
     /**
@@ -267,6 +282,7 @@ public class View extends JFrame {
      private JButton transformButton;
      private JLabel logoPanel;
      private JButton clearSearchButton;
+     private JButton downloadButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     private ChartPanel chartPanel;
     private TransformationType[] transformationTypes;
