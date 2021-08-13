@@ -198,6 +198,7 @@ public class DataSeries {
     }
 
     public ArrayList<DataPoint> getRawData() {
+        if(rawData.isEmpty()) retrieveRawData();
         return rawData;
     }
 

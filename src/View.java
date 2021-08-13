@@ -1,6 +1,4 @@
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.time.TimeSeriesCollection;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -11,7 +9,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Locale;
 
 /*
  * Created by JFormDesigner on Tue Aug 03 16:20:51 EDT 2021
