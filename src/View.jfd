@@ -29,6 +29,7 @@ new FormModel {
 				"x": 1100
 				"y": 145
 				"height": 30
+				"width": 95
 			} )
 			add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 				name: "outputMessageScrollPane"
@@ -91,10 +92,19 @@ new FormModel {
 				name: "clearSearchButton"
 				"text": "Clear Search"
 			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
-				"x": 1195
+				"x": 1235
 				"y": 145
-				"width": 135
+				"width": 140
 				"height": 30
+			} )
+			add( new FormComponent( "javax.swing.JButton" ) {
+				name: "downloadButton"
+				"text": "Download Data"
+			}, new FormLayoutConstraints( class com.jformdesigner.runtime.NullConstraints ) {
+				"x": 440
+				"y": 185
+				"height": 30
+				"width": 165
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 5 )
