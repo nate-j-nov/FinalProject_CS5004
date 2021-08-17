@@ -81,7 +81,8 @@ public class DataSeriesChartWrapper  {
         // Set the chart panel settings
         ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setBackground(Color.WHITE);
-        chartPanel.setMouseZoomable(false);
+        chartPanel.setMouseWheelEnabled(true);
+
         return chartPanel;
     }
 
