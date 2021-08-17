@@ -61,6 +61,7 @@ public class View extends JFrame {
         logoPanel = new JLabel();
         clearSearchButton = new JButton();
         downloadButton = new JButton();
+        label1 = new JLabel();
 
         //======== this ========
         var contentPane = getContentPane();
@@ -118,6 +119,11 @@ public class View extends JFrame {
         downloadButton.setText("Download Data");
         contentPane.add(downloadButton);
         downloadButton.setBounds(440, 185, 165, 30);
+
+        //---- label1 ----
+        label1.setText("To zoom, scroll the mousewheel where you want to zoom in or out");
+        contentPane.add(label1);
+        label1.setBounds(10, 695, 420, label1.getPreferredSize().height);
 
         {
             // compute preferred size
@@ -283,6 +289,7 @@ public class View extends JFrame {
      private JLabel logoPanel;
      private JButton clearSearchButton;
      private JButton downloadButton;
+     private JLabel label1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     private ChartPanel chartPanel;
     private TransformationType[] transformationTypes;
