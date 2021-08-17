@@ -3,6 +3,8 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.XYSeriesLabelGenerator;
+import org.jfree.chart.labels.XYToolTipGenerator;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.chart.title.TextTitle;
@@ -52,6 +54,16 @@ public class DataSeriesChartWrapper  {
         XYPlot plot = chart.getXYPlot();
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+
+        renderer.setDefaultToolTipGenerator(new XYToolTipGenerator() {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
+            @Override
+            public String generateToolTip(XYDataset xyDataset, int i, int i1) {
+                return  dateFormat.format((xyDataset.getXValue(i, i1)))
+                        + " | "
+                        + xyDataset.getYValue(i, i1);
+            }
+        });
 
         renderer.setSeriesPaint(0, Color.BLUE);
         renderer.setSeriesStroke(0, new BasicStroke(2.0f));
