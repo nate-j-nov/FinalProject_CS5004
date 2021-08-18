@@ -4,11 +4,20 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * @author Nate Novak
+ * CS5004 Summer 2021
+ * Class file for generating a csv file from a data series
+ */
 public class DataSeriesCsvGenerator extends CsvGeneratorService {
     private ArrayList<DataSeries> dataSeriesList;
     private SimpleDateFormat dateFormat;
     private boolean moreThanOne;
 
+    /**
+     * Argument constructor
+     * @param dataSeriesList ArrayList of data series to generate the CSV
+     */
     public DataSeriesCsvGenerator(ArrayList<DataSeries> dataSeriesList) {
         super();
         this.dataSeriesList = new ArrayList<>();
@@ -20,6 +29,7 @@ public class DataSeriesCsvGenerator extends CsvGeneratorService {
     @Override
     public String generateCsvFile() {
         Date now = new Date();
+        // Create the file name
         String fileName;
         if(moreThanOne) {
             fileName = dataSeriesList.get(0).getSeriesCode()
@@ -35,6 +45,7 @@ public class DataSeriesCsvGenerator extends CsvGeneratorService {
                     + ".csv";
         }
 
+        // Create the lines from the dataset
         generateCsvLines();
 
         try {
@@ -57,9 +68,12 @@ public class DataSeriesCsvGenerator extends CsvGeneratorService {
             writer.append("Date_1,").append(dataSeriesList.get(0).getSeriesName());
             if(moreThanOne) writer.append(",Date_2,").append(dataSeriesList.get(1).getSeriesName());
             writer.append("\n");
+
+            // Generate the actual lines of the CSV file
             for(String[] line : lines) {
                 writer.append(convertToCsvLine(line)).append("\n");
             }
+
             writer.flush();
             writer.close();
             return "CSV file successfully generated.";
@@ -68,6 +82,9 @@ public class DataSeriesCsvGenerator extends CsvGeneratorService {
         }
     }
 
+    /**
+     * Essentially, this ensures that all data points of each dataset is written to the CSV file
+     */
     @Override
     protected void generateCsvLines() {
         if(!moreThanOne) {

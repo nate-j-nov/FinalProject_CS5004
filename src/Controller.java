@@ -1,19 +1,19 @@
-import jdk.jshell.spi.ExecutionControl;
-
 import javax.xml.crypto.Data;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
- * Controller class for the application
+ * @author Nate NOvak
+ * CS5004 Summer 2021
+ * Class file for a controller. Mostly just controls the data that's available for the
+ * User to interact with
  */
 public class Controller {
-
     private ArrayList<DataSeries> availableDataSeries;
-    private DataSeries selection;
 
+    /**
+     * No argument constructor that generates the list of data series available
+     */
     public Controller() {
         GdpSeriesGenerator gdpSeriesGenerator = new GdpSeriesGenerator();
         LaborMarketSeriesGenerator laborMarketSeriesGenerator = new LaborMarketSeriesGenerator();
@@ -23,18 +23,25 @@ public class Controller {
     }
 
     /**
-     * TODO: Add javadoc
-     * @return
+     * Get the available data series generated in the constructor
+     * @return ArrayList of available DataSeries
      */
     public ArrayList<DataSeries> getAvailableDataSeries() {
         return availableDataSeries;
     }
 
+    /**
+     * Generates a list of data series available based on the filter from the search bar
+     * @param textToFilter String of text used to filter the available data series
+     * @return ArrayList of DataSeries objects based on the filter
+     */
     public ArrayList<DataSeries> getAvailableDataSeriesAfterFilter(String textToFilter) {
-        ArrayList<DataSeries> returnSeries = new ArrayList<>();
-        returnSeries.addAll(availableDataSeries);
-        return (ArrayList<DataSeries>) returnSeries.stream().filter(d -> d.getSeriesName()
+        ArrayList<DataSeries> returnSeries = (ArrayList<DataSeries>) availableDataSeries.stream().filter(d -> d.getSeriesName()
                 .toLowerCase().contains(textToFilter)).
                 collect(Collectors.toList());
+        if(returnSeries.isEmpty()) {
+            return availableDataSeries;
+        }
+        return returnSeries;
     }
 }

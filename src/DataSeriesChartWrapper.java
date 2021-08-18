@@ -19,6 +19,12 @@ import java.util.ArrayList;
 /*
 This was used for help: https://zetcode.com/java/jfreechart/
  */
+
+/**
+ * @author Nate Novak
+ * CS5004 Summer 2021
+ * Class to handle charting the data in the view
+ */
 public class DataSeriesChartWrapper  {
     private final ArrayList<DataSeries> dataSeriesList;
     private JFreeChart chart;
@@ -26,20 +32,26 @@ public class DataSeriesChartWrapper  {
     private final int ZERO = 0;
     private final int ONE = 1;
 
+    /**
+     * Argument constructor for the DataSeriesChartWrapper
+     * @param dataSeriesList ArrayList of DataSeries objects to be charted
+     */
     public DataSeriesChartWrapper(ArrayList<DataSeries> dataSeriesList) {
         this.dataSeriesList = new ArrayList<>();
         this.dataSeriesList.addAll(dataSeriesList);
         this.moreThanOne = dataSeriesList.size() > 1;
     }
 
-    // When the transformation changes, just call generateChart again.
-    // When new data is selected, create an entirely new chart.
-    // I know this is horrible, but it takes a ton of configuration to get it looking correct.
-    // I tried to separate it as much as possible into methods to reduce duplicate code
+    /**
+     * Generates a ChartPanel of the data
+     * @param transformationType type of transformation
+     * @return ChartPanel object of the data
+     */
     public ChartPanel generateChart(TransformationType transformationType) {
 
         String primaryYAxisLabel = getYAxisLabel(dataSeriesList.get(ZERO), transformationType);
 
+        // Generate the data
         XYDataset dataset = generateData(transformationType);
 
         String chartTitle = getChartTitle(dataSeriesList.get(ZERO), transformationType);
@@ -56,6 +68,7 @@ public class DataSeriesChartWrapper  {
 
         XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
 
+        // Add tooltips
         renderer.setDefaultToolTipGenerator(new XYToolTipGenerator() {
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy");
             @Override
@@ -66,6 +79,7 @@ public class DataSeriesChartWrapper  {
             }
         });
 
+        // Set various formatting options
         renderer.setSeriesPaint(0, Color.BLUE);
         renderer.setSeriesShapesVisible(0, false);
         renderer.setSeriesStroke(0, new BasicStroke(2.0f));
@@ -107,6 +121,11 @@ public class DataSeriesChartWrapper  {
         return chartPanel;
     }
 
+    /**
+     * Generates the data to be charted
+     * @param transformationType type of transformation
+     * @return TimeSeriesCollection of the data series to be charted.
+     */
     private TimeSeriesCollection generateData(TransformationType transformationType) {
 
         TimeSeriesCollection timeSeriesCollection = new TimeSeriesCollection();
@@ -118,6 +137,12 @@ public class DataSeriesChartWrapper  {
         return timeSeriesCollection;
     }
 
+    /**
+     * Method to set the time series with the data from the dataseries
+     * @param dataSeries DataSeries to chart
+     * @param transformationType type of transformation
+     * @return TimeSeries object of the data series data
+     */
     private TimeSeries configureTimeSeries(DataSeries dataSeries, TransformationType transformationType) {
         TimeSeries timeSeries = new TimeSeries(dataSeries.getSeriesName());
 
@@ -135,12 +160,24 @@ public class DataSeriesChartWrapper  {
         return timeSeries;
     }
 
+    /**
+     * Determine a Y Axis label
+     * @param dataSeries DataSeries being mapped to the axis
+     * @param transformationType type of data transformation
+     * @return String of the label
+     */
     private String getYAxisLabel(DataSeries dataSeries, TransformationType transformationType) {
         if(transformationType == TransformationType.Level && dataSeries.getProviderName().equals("BEA")) return "$ Millions";
         else if(transformationType == TransformationType.Level && dataSeries.getProviderName().equals("BLS")) return "Thousands";
         else return "Percent";
     }
 
+    /**
+     * Generates the chart title
+     * @param dataSeries dataseries being charted
+     * @param transformationType type of data transformation
+     * @return string representation of a data series' title in the context of the chart
+     */
     private String getChartTitle(DataSeries dataSeries, TransformationType transformationType) {
         return switch (transformationType) {
             case Level -> dataSeries.getSeriesName();

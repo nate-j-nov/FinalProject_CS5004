@@ -3,6 +3,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 
+/**
+ * @author Nate Novak
+ * CS5004 Summer 2021
+ * Class file for a table model that contains a data series
+ */
 public class DataSeriesTableModel extends AbstractTableModel {
     private ArrayList<DataSeries> dataSeriesList;
     private ArrayList<DataPoint> displayedData_1;
@@ -12,6 +17,11 @@ public class DataSeriesTableModel extends AbstractTableModel {
     private final int ONE = 1;
     private boolean moreThanOne;
 
+    /**
+     * Argument constructor
+     * @param dataSeriesList list of data series to display to table
+     * @param transformationType type of data transformation
+     */
     public DataSeriesTableModel(ArrayList<DataSeries> dataSeriesList , TransformationType transformationType) {
         this.dataSeriesList = new ArrayList<>();
         this.dataSeriesList.addAll(dataSeriesList);
@@ -46,6 +56,10 @@ public class DataSeriesTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Get the number of rows
+     * @return Number of rows to be displayed
+     */
     @Override
     public int getRowCount() {
         return dataSeriesList.stream()
@@ -55,11 +69,21 @@ public class DataSeriesTableModel extends AbstractTableModel {
                 .size();
     }
 
+    /**
+     * Get the number of columns
+     * @return integer representation of the number of columns
+     */
     @Override
     public int getColumnCount() {
         return dataSeriesList.size() * 2;
     }
 
+    /**
+     * Method to get the value at a particular "cell" of the data table
+     * @param rowIndex integer representation of the of row
+     * @param columnIndex integer representation of the column
+     * @return Object to be displayed at the row/column location
+     */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
          switch(columnIndex) {
@@ -80,10 +104,20 @@ public class DataSeriesTableModel extends AbstractTableModel {
         }
     }
 
+    /**
+     * Get the name of a certain column
+     * @param col integer value of the column to find the name of
+     * @return String representation of the column's name
+     */
     public String getColumnName(int col) {
         return columnNames[col];
     }
 
+    /**
+     * Get the class of a column
+     * @param col integer representation of the column
+     * @return the Class type of the indicated column
+     */
     public Class getColumnClass(int col) {
         if(col == 0 || col == 2) return Date.class;
         if(col == 1 || col == 3) return double.class;

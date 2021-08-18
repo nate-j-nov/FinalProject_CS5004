@@ -1,28 +1,25 @@
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-// Experimentation with DBNomics API
 /*
 I followed this article for guidance:
 https://medium.com/swlh/getting-json-data-from-a-restful-api-using-java-b327aafb3751
  */
-class ApiHandler {
-    /**
-     * String Representation of the base url
-     */
-    private String baseUrlString;
 
-    /**
-     * HttpURLConnection to access the API endpoint
-     */
+/**
+ * @author Nate Novak
+ * CS5004 Summer 2021
+ * Class file for an API handler, which is a general service to make API requests.
+ */
+class ApiHandler {
+
+    private String baseUrlString;
     private HttpURLConnection connection;
 
     /**

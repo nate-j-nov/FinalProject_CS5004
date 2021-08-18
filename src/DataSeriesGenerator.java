@@ -1,12 +1,9 @@
-
+import java.util.ArrayList;
 /**
  * @author Nate Novak
- * 7/24/2021
+ * CS5004 Summer 2021
  * Class to generate the data series that will be available in the application
  */
-
-import java.util.ArrayList;
-
 public abstract class DataSeriesGenerator implements IDataSeriesGenerator {
 
     protected final DbnomicsApiClient dbnomicsApiClient;
@@ -30,5 +27,9 @@ public abstract class DataSeriesGenerator implements IDataSeriesGenerator {
         }
     }
 
+    /**
+     * Method to clean and set the names of each data series from the API call
+     * @param dataSeries DataSeries object
+     */
     protected abstract void cleanDataSeriesNames(ArrayList<DataSeries> dataSeries);
 }
