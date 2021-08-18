@@ -19,14 +19,13 @@ dataSeriesDropdown.setModel(new DefaultComboBoxModel(displayedDataSeries.toArray
 dataSeriesDropdown.setSelectedIndex(0);
 */
 
-
 /**
  * @author Nate Novak
  */
 public class View extends JFrame {
     private Controller controller;
     private ArrayList<DataSeries> displayedDataSeries;
-    private DataSeries selectedDataSeries;
+    private ArrayList<DataSeries> selectedDataSeries;
     private final int ZERO = 0;
     private TransformationType selectedTransformation;
 
@@ -34,11 +33,15 @@ public class View extends JFrame {
     {
         this.controller = controller;
         this.displayedDataSeries = controller.getAvailableDataSeries();
-        this.selectedDataSeries = displayedDataSeries.get(ZERO);
+        this.selectedDataSeries = new ArrayList<>();
+        this.selectedDataSeries.add(displayedDataSeries.get(ZERO));
         this.selectedTransformation = TransformationType.Level;
-        selectedDataSeries.retrieveRawData();
-        transformationTypes = new TransformationType[]{TransformationType.Level,
-                TransformationType.MonthlyDelta, TransformationType.YearlyDelta};
+        this.selectedDataSeries.get(ZERO).retrieveRawData();
+        this.transformationTypes = new TransformationType[] {
+                TransformationType.Level,
+                TransformationType.MonthlyDelta,
+                TransformationType.YearlyDelta
+        };
         initComponents();
         setComponentDetails();
         initEvents();
@@ -62,6 +65,7 @@ public class View extends JFrame {
         clearSearchButton = new JButton();
         downloadButton = new JButton();
         label1 = new JLabel();
+        addDataButton = new JButton();
 
         //======== this ========
         var contentPane = getContentPane();
@@ -125,6 +129,11 @@ public class View extends JFrame {
         contentPane.add(label1);
         label1.setBounds(10, 695, 420, label1.getPreferredSize().height);
 
+        //---- addDataButton ----
+        addDataButton.setText("Add Data");
+        contentPane.add(addDataButton);
+        addDataButton.setBounds(635, 185, 135, 30);
+
         {
             // compute preferred size
             Dimension preferredSize = new Dimension();
@@ -185,10 +194,11 @@ public class View extends JFrame {
                     return;
                 }
                 // Update the data table.
-                selectedDataSeries = (DataSeries) dataSeriesDropdown.getSelectedItem();
+                selectedDataSeries.clear();
+                selectedDataSeries.add((DataSeries) dataSeriesDropdown.getSelectedItem());
                 selectedTransformation = TransformationType.Level;
-                outputMessageTextPane.append("\nRetrieving " + selectedDataSeries.getSeriesName() + " data...");
-                selectedDataSeries.retrieveRawData();
+                outputMessageTextPane.append("\nRetrieving " + selectedDataSeries.get(ZERO).getSeriesName() + " data...");
+                selectedDataSeries.get(ZERO).retrieveRawData();
                 dataTable.setModel(new DataSeriesTableModel(selectedDataSeries, selectedTransformation));
                 // Update chart
                 updateChart();
@@ -201,7 +211,7 @@ public class View extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(selectedTransformation == transformationComboBox.getSelectedItem()) {
-                    outputMessageTextPane.append("\nAlready displaying this transformation for " + selectedDataSeries.getSeriesName() + ".");
+                    outputMessageTextPane.append("\nAlready displaying this transformation for " + selectedDataSeries.get(ZERO).getSeriesName() + ".");
                     return;
                 }
                 selectedTransformation = (TransformationType) transformationComboBox.getSelectedItem();
@@ -246,9 +256,33 @@ public class View extends JFrame {
         downloadButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                outputMessageTextPane.append("\nDownloading CSV for " + selectedDataSeries.getSeriesName());
+                outputMessageTextPane.append("\nDownloading CSV for " + selectedDataSeries.get(ZERO).getSeriesName());
                 DataSeriesCsvGenerator csvGenerator = new DataSeriesCsvGenerator(selectedDataSeries);
                 outputMessageTextPane.append("\n" + csvGenerator.generateCsvFile());
+            }
+        });
+
+        addDataButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                DataSeries dataToBeAdded = (DataSeries) dataSeriesDropdown.getSelectedItem();
+                if(selectedDataSeries.size() == 2) {
+                    selectedDataSeries.remove(1);
+                }
+                if(dataToBeAdded == selectedDataSeries.get(ZERO)) {
+                    outputMessageTextPane.append("\nData is already displayed...");
+                    return;
+                }
+                outputMessageTextPane.append("\nAdding data for " + dataToBeAdded.getSeriesName() + "...");
+                dataToBeAdded.retrieveRawData();
+                if(!dataToBeAdded.getRawData().isEmpty()) {
+                    selectedDataSeries.add(dataToBeAdded);
+                    dataTable.setModel(new DataSeriesTableModel(selectedDataSeries, selectedTransformation));
+                    updateChart();
+                    outputMessageTextPane.append("\nSuccessfully added");
+                } else {
+                    outputMessageTextPane.append("\nUnable to add " + dataToBeAdded.getSeriesName());
+                }
             }
         });
     }
@@ -290,6 +324,7 @@ public class View extends JFrame {
      private JButton clearSearchButton;
      private JButton downloadButton;
      private JLabel label1;
+     private JButton addDataButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     private ChartPanel chartPanel;
     private TransformationType[] transformationTypes;

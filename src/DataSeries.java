@@ -210,4 +210,8 @@ public class DataSeries {
         return endDate;
     }
 
+    public PeriodType getPeriodType() {
+        return periodType;
+    }
+
 }
