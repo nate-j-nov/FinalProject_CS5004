@@ -1,4 +1,9 @@
-
+/**
+ * @author Nate Novak
+ * CS5004 Summer 2021
+ * Enum of transformation type. Indicates if the level data, monthly change, or yearly data
+ * should be reported
+ */
 public enum TransformationType {
     Level,
     MonthlyDelta,

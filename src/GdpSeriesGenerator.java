@@ -1,10 +1,17 @@
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * @author Nate Novak
+ * CS5004 Summer 2021
+ * Class file for the GDP generator
+ */
 public class GdpSeriesGenerator extends DataSeriesGenerator{
+    /**
+     * No argument constructor for the GDP series generator
+     */
     public GdpSeriesGenerator() {
         super();
     }

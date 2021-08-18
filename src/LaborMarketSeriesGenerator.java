@@ -1,12 +1,19 @@
-
-
 import java.util.ArrayList;
 
+/**
+ * @author Nate Novak
+ * CS5004 Summer 2021
+ * Class file for a Labor Market Data Series generator
+ */
 public class LaborMarketSeriesGenerator extends DataSeriesGenerator{
 
+    /**
+     * No argument constructor
+     */
     public LaborMarketSeriesGenerator() {
         super();
     }
+
     /**
      * Generate the Labor market data series
      * @return ArrayList of data series from the BLS
@@ -44,8 +51,8 @@ public class LaborMarketSeriesGenerator extends DataSeriesGenerator{
     }
 
     /**
-     * Clean up the GDP names so extraneous parts are is removed. TODO: put this in abstract class.
-     * @param dataSeries ArrayList of GDP data
+     * Clean up the Labor market data series names so extraneous parts are is removed.
+     * @param dataSeries ArrayList of Labor Market data
      */
     protected void cleanDataSeriesNames(ArrayList<DataSeries> dataSeries) {
         for (DataSeries ds : dataSeries) {

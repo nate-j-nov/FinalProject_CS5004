@@ -1,10 +1,8 @@
-
 /**
  * @author Nate Novak
  * 7/25/2021
  * KeyValuePair<T, E> class used for returning key value pairs
  */
-
 public class KeyValuePair<T, E> {
     private T key;
     private E value;

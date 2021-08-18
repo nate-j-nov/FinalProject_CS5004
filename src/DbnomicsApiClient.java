@@ -1,20 +1,16 @@
-
-/**
- * @author Nate Novak
- * 7/24/2021
- * Class file making calls to the DBNomics API
- */
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * @author Nate Novak
+ * CS5004 Summer 2021
+ * Class file making calls to the DBNomics API
+ */
 public class DbnomicsApiClient {
 
     /**
