@@ -197,6 +197,8 @@ public class View extends JFrame {
      */
     private void initEvents() {
         getDataButton.addMouseListener(new MouseAdapter() {
+            // Handle getData Button method
+            // Essentially makes a call to the API for the specific data and displays it
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(selectedDataSeries == dataSeriesDropdown.getSelectedItem()) {
@@ -217,6 +219,8 @@ public class View extends JFrame {
             }
         });
 
+        // Handles transformation button click
+        // Basically changes the data to reflect Level/Monthly Change/Yearly Change data
         transformButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -234,6 +238,8 @@ public class View extends JFrame {
             }
         });
 
+        // Handles Search button being clicked
+        // Changes the data available to the user
         searchButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -251,6 +257,8 @@ public class View extends JFrame {
             }
         });
 
+        // Handles the clear search button
+        // Essentially returns to original state of data series available
         clearSearchButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -263,6 +271,7 @@ public class View extends JFrame {
             }
         });
 
+        // Generates CSV file of the data
         downloadButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -272,6 +281,7 @@ public class View extends JFrame {
             }
         });
 
+        // Adds a second dataseries to table and chart
         addDataButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

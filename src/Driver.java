@@ -12,7 +12,7 @@ public class Driver {
         View view = new View(controller);
 
         view.setTitle("Nata");
-        view.setSize(JFrame.MAXIMIZED_HORIZ, JFrame.MAXIMIZED_VERT);
+        view.setSize(1500, 950);
         view.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         view.setVisible(true);
