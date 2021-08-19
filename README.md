@@ -1,4 +1,5 @@
 # N8a
+NOTE: THE DEMO VIDEO IS IN THE NateNovak_Demo.zip FOLDER
 Welcome to N8a! The app is simple:
 - To see the data of a certain data series, select the series from the Dropdown and press the GetData Button
 - Use the search bar to filter the series in the dropdown. If your search yields no results, then you'll get the entire list of data series available in the dropdown. 
